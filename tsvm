@@ -1,0 +1,39 @@
+import scipy.io
+from pylab import *
+import numpy as np
+
+from sklearn.datasets import load_digits
+from sklearn.decomposition import PCA
+from sklearn.decomposition import RandomizedPCA
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+
+
+data = scipy.io.loadmat('data\\Indian_pines_corrected.mat')
+X = data['indian_pines_corrected']
+print('dimention of data',X.shape)
+
+T = scipy.io.loadmat('data\\Indian_pines_gt.mat')
+T= T['indian_pines_gt']
+print("gt.shape",T.shape)
+Tf = T.flatten()
+print("Tf.shape", Tf.shape)
+#Xr= np.resize(X, (145*145,200))
+Xr= np.resize(X, (145*145,200))
+print(Xr.shape)
+
+X_train, X_test, y_train, y_test = train_test_split(Xr, Tf, test_size=0.95)
+print(X_train.shape,X_test.shape,y_train.shape,y_test.shape)
+
+
+n_unlabeled = int(X_train.shape[0] * 0.999)
+idxs = np.random.choice(X_train.shape[0], size=n_unlabeled)
+y_train[idxs] = -1
+print(X_train.shape,y_train.shape,idxs.shape,y_train[idxs].shape)
+print('train data with labeled and unlabeled portion',X_train, y_train[idxs],y_train)
+
+
+
+
